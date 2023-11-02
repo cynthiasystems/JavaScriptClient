@@ -1,40 +1,22 @@
 (function(window) {
     'use strict';
 
+    // Cynthia API Client
     var CynthiaAPI = {
-        endpoint: 'https://api.cynthia.io/api/v1.0/search', // The endpoint URL
+        endpoint: 'https://api.cynthia.io/api/v1.0/search',
 
         /**
          * Execute a search against the Cynthia API
-         * @param {string} modelName - The name of the model being used
-         * @param {string} modelVersion - The version of the model being used
-         * @param {string} query - The search term or query
-         * @param {string} apiKey - The client API key
-         * @param {Object} [options={}] - Search options
+         * @param {string[]} queries - List of search terms or queries
+         * @param {string} modelName - The model's name
+         * @param {string} modelVersion - The model's version
+         * @param {int} top - Max number of results
+         * @param {bool} autoLimit - Option to allow Cynthia to reduce results for increased precision
+         * @param {string} apiKey - API key for authentication
          * @param {function} onSuccess - Callback for successful API call
          * @param {function} onError - Callback for error in API call
          */
-        search: function(modelName, modelVersion, query, apiKey, options, onSuccess, onError) {
-            options = options || {};
-
-            // Default options if not provided
-            var defaultOptions = {
-                autoLimit: true,
-                top: 50
-            };
-            for (var opt in defaultOptions) {
-                if (defaultOptions.hasOwnProperty(opt) && !options.hasOwnProperty(opt)) {
-                    options[opt] = defaultOptions[opt];
-                }
-            }
-
-            var requestBody = {
-                data: [{
-                    query: query
-                }],
-                options: options
-            };
-
+        search: function(queries, modelName, modelVersion, top, autoLimit, apiKey, onSuccess, onError) {
             // Check if browser supports XMLHttpRequest
             if (!window.XMLHttpRequest) {
                 console.error('Your browser does not support XMLHttpRequest. Consider upgrading.');
@@ -43,6 +25,17 @@
 
             // Create XMLHttpRequest instance
             var xhr = new XMLHttpRequest();
+
+            // Construct request payload from queries
+            var requestData = {
+                data: queries.map(function(query) {
+                    return { query: query };
+                }),
+                options: {
+                    autoLimit: autoLimit,
+                    top: top
+                }
+            };
 
             // Handle ready state change
             xhr.onreadystatechange = function() {
@@ -65,15 +58,12 @@
                 onError('Network error.');
             };
 
-            // Open the XMLHttpRequest
-            xhr.open('POST', `${this.endpoint}/${modelName}/${modelVersion}`, true);
-
-            // Set headers
-            xhr.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
-            xhr.setRequestHeader('cynthia-api-key', apiKey);
-
-            // Send the XMLHttpRequest with the requestBody
-            xhr.send(JSON.stringify(requestBody));
+            // Open and send the XMLHttpRequest
+            var apiUrl = this.endpoint + '/' + modelName + '/' + modelVersion;
+            xhr.open('POST', apiUrl, true);
+            xhr.setRequestHeader("Content-Type", "application/json");
+            xhr.setRequestHeader("cynthia-api-key", apiKey);
+            xhr.send(JSON.stringify(requestData));
         }
     };
 
@@ -81,3 +71,7 @@
     window.CynthiaAPI = CynthiaAPI;
 
 })(window);
+
+
+
+
