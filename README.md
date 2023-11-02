@@ -53,7 +53,7 @@ The `onSuccess` callback function will receive the search results in a JSON form
         "resultId": <string>,
         "score": <float>,
         "properties": { 
-          <string key>: <string value>,
+          <string>: <string>,
           ...
         }
       },
