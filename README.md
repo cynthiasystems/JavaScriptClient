@@ -46,14 +46,14 @@ The `onSuccess` callback function will receive the search results in a JSON form
 
 ```
 {
-  "correlationId": "uuid",
+  "correlationId": <string>,
   "data": [
     [
       {
-        "resultId": "uuid",
-        "score": float,
+        "resultId": <string>,
+        "score": <float>,
         "properties": { 
-          key: value,
+          <string key>: <string value>,
           ...
         }
       },
