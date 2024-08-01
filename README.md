@@ -1,8 +1,10 @@
-# Cynthia.js
+# Cynthia JavaScript Client
 
 `Cynthia.js` is a lightweight and powerful JavaScript library that integrates AI-powered search 
 capabilities into web applications. This library provides an easy way to enhance your website's 
 search functionality with intelligent, context-aware results.
+
+![JavaScript Magic Spell](docs/JavaScriptMagicSpell.png)
 
 ## Features
 
